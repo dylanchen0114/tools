@@ -31,9 +31,10 @@ class AdvancedEdd:
     
     """
 
-    def __init__(self, input_path, output_path, y_index):
+    def __init__(self, input_path, var_type, output_path, y_index):
 
         self.input_path = input_path
+        self.var_type = var_type
         self.output_path = output_path
         self.y_index = y_index
 
@@ -148,7 +149,7 @@ class AdvancedEdd:
 
         print("Getting each variables' type ...")
         type_dict = {}
-        with open('/Users/dylan/Desktop/var_type.csv') as dict_file:
+        with open(self.var_type) as dict_file:
             for row_index, row_data in enumerate(dict_file):
                 if row_index == 0:
                     continue
@@ -181,5 +182,6 @@ class AdvancedEdd:
 
 
 if __name__ == '__main__':
-    AdvancedEdd(input_path='/Users/dylan/Desktop/implement_test.csv',
+    AdvancedEdd(var_type='/Users/dylan/Desktop/var_type.csv',
+                input_path='/Users/dylan/Desktop/implement_test.csv',
                 output_path='/Users/dylan/Desktop/output_edd.csv', y_index=-1).run()
