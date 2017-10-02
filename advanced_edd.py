@@ -179,9 +179,3 @@ class AdvancedEdd:
             os.remove(remove_file)
 
         print('Done')
-
-
-if __name__ == '__main__':
-    AdvancedEdd(var_type='/Users/dylan/Desktop/var_type.csv',
-                input_path='/Users/dylan/Desktop/implement_test.csv',
-                output_path='/Users/dylan/Desktop/output_edd.csv', y_index=-1).run()
