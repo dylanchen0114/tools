@@ -1,13 +1,19 @@
 # -*- coding: utf-8 -*-
 
+"""
+@author: Dylan Chen
+
+"""
 
 import pickle
 
 
-def _save(fname, data, protocol=3):
-    with open(fname, "wb") as f:
-        pickle.dump(data, f, protocol)
+def save_pickle(data, filename):
+    with open(filename, 'wb') as f:
+        pickle.dump(data, f)
 
-def _load(fname):
-    with open(fname, "rb") as f:
+
+def load_pickle(filename):
+    with open(filename, 'rb') as f:
         return pickle.load(f)
+
