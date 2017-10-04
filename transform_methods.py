@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
 
-import pandas as pd
-import numpy as np
 import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
 from sklearn import tree
 from sklearn.model_selection import cross_val_score
 
