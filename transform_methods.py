@@ -376,3 +376,49 @@ class WoE:
         t_bad = 0.5 if t_bad == 0 else t_bad
         t_good = 0.5 if t_good == 0 else t_good
         return np.log(t_good / t_bad)
+
+
+class EndsCapping:
+
+    def __init__(self, low_percent=None, up_percent=None, inplace=True):
+
+        self.inplace = inplace
+        self.low_percent = low_percent
+        self.up_percent = up_percent
+
+    def fit(self, x):
+
+        if not self.inplace:
+            tmp = x.copy()
+        else:
+            tmp = x
+
+        if self.low_percent is not None:
+            self.floor = tmp.quantile(self.low_percent)  # interpolation='lower'
+            tmp[tmp < self.floor] = self.floor
+
+        if self.up_percent is not None:
+            self.ceil = tmp.quantile(self.up_percent)  # interpolation='higher'
+            tmp[tmp > self.ceil] = self.ceil
+
+        if not self.inplace:
+            return tmp
+
+    def transform(self, x):
+
+        if not self.inplace:
+            tmp = x.copy()
+        else:
+            tmp = x
+
+        if self.floor is not None:
+            tmp[tmp < self.floor] = self.floor
+
+        if self.ceil is not None:
+            tmp[tmp > self.ceil] = self.ceil
+
+        if not self.inplace:
+            return tmp
+
+
+
