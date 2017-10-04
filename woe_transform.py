@@ -103,9 +103,7 @@ class WoE:
             0   NaN  d_nan
             1   0.0    d_0
             2   1.0    d_1
-               
         """
-
         df_sp_values, d_bins = self._disc_labels(df_sp_values)
         # getting continuous and discrete values together
         self.df = df_sp_values.append(df_cont)
@@ -117,9 +115,7 @@ class WoE:
         3. 总样本数-bad数， 记为good
         4. 通过2、3，计算每一组的woe, 将woe merge至df上
         5. 计算每一组的iv, self.iv 等于所有组iv的加和
-        
         """
-
         self._calc_stat()
         # sorting appropriately for further cutting in transform method
         self.bins.sort_values('bins', inplace=True)
