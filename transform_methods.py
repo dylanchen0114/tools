@@ -469,3 +469,78 @@ class EndsCappingValue:
         if not self.inplace:
             return tmp
 
+
+class CategoricalMeanEncoded:
+
+    def __init__(self, C=100, loo=False, noisy=False, noise_std=None, random_state=12):
+        self.random_state = np.random.RandomState(random_state)
+        self.C = C
+        self.loo = loo
+        self.noisy = noisy
+        self.noise_std = noise_std
+
+    def fit(self, train_cate, train_y, save=False):
+
+        train_cate = train_cate.reset_index(drop=True)
+        train_target = train_y.reset_index(drop=True)
+        train_res = np.zeros(train_cate.shape, dtype=np.float32)
+
+        self.global_target_mean = train_target.mean()
+        self.global_target_std = train_target.std() if self.noise_std is None else self.noise_std
+
+        self.target_sums = {}
+        self.target_cnts = {}
+
+        for col in range(train_cate.shape[1]):
+            trans_values = self.fit_transform_column(col, train_target, pd.Series(train_cate.ix[:, col]))
+
+            if save:
+                print('Saving Mean-Encode Mapping Table ...')
+                map_table = pd.DataFrame({'feature': train_cate.ix[:, col], 'mean_encode': trans_values})
+                map_table.to_csv('./mapping_table_%s.csv' % train_cate.columns[col], index=None)
+
+            train_res[:, col] = trans_values
+
+        return train_res
+
+    def fit_transform_column(self, col, train_target, train_series):
+        self.target_sums[col] = train_target.groupby(train_series).sum()
+        self.target_cnts[col] = train_target.groupby(train_series).count()
+
+        if self.noisy:
+            train_res_reg = self.random_state.normal(
+                loc=self.global_target_mean * self.C,
+                scale=self.global_target_std * np.sqrt(self.C),
+                size=len(train_series)
+            )
+        else:
+            train_res_reg = self.global_target_mean * self.C
+
+        train_res_num = train_series.map(self.target_sums[col]) + train_res_reg
+        train_res_den = train_series.map(self.target_cnts[col]) + self.C
+
+        if self.loo:  # Leave-one-out mode, exclude current observation
+            train_res_num -= train_target
+            train_res_den -= 1
+
+        return np.exp(train_res_num / train_res_den).values
+
+    def transform(self, test_cate):
+        test_cate = test_cate.reset_index(drop=True)
+        test_res = np.zeros(test_cate.shape, dtype=np.float32)
+
+        for col in range(test_cate.shape[1]):
+            test_res[:, col] = self.transform_column(col, pd.Series(test_cate.ix[:, col]))
+
+        return test_res
+
+    def transform_column(self, col, test_series):
+        test_res_num = test_series.map(self.target_sums[col]).fillna(0.0) + self.global_target_mean * self.C
+        test_res_den = test_series.map(self.target_cnts[col]).fillna(0.0) + self.C
+
+        return np.exp(test_res_num / test_res_den).values
+
+
+
+
+
