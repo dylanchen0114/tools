@@ -378,7 +378,7 @@ class WoE:
         return np.log(t_good / t_bad)
 
 
-class EndsCapping:
+class EndsCappingPercentile:
 
     def __init__(self, low_percent=None, up_percent=None, inplace=True):
 
@@ -413,6 +413,35 @@ class EndsCapping:
 
         if self.floor is not None:
             tmp[tmp < self.floor] = self.floor
+        else:
+            raise Exception("Must run fit in advance !")
+
+        if self.ceil is not None:
+            tmp[tmp > self.ceil] = self.ceil
+        else:
+            raise Exception("Must run fit in advance !")
+
+        if not self.inplace:
+            return tmp
+
+
+class EndsCappingValue:
+
+    def __init__(self, floor=None, ceil=None, inplace=True):
+
+        self.inplace = inplace
+        self.floor = floor
+        self.ceil = ceil
+
+    def fit(self, x):
+
+        if not self.inplace:
+            tmp = x.copy()
+        else:
+            tmp = x
+
+        if self.floor is not None:
+            tmp[tmp < self.floor] = self.floor
 
         if self.ceil is not None:
             tmp[tmp > self.ceil] = self.ceil
@@ -420,5 +449,23 @@ class EndsCapping:
         if not self.inplace:
             return tmp
 
+    def transform(self, x):
 
+        if not self.inplace:
+            tmp = x.copy()
+        else:
+            tmp = x
+
+        if self.floor is not None:
+            tmp[tmp < self.floor] = self.floor
+        else:
+            raise Exception("Must run fit in advance !")
+
+        if self.ceil is not None:
+            tmp[tmp > self.ceil] = self.ceil
+        else:
+            raise Exception("Must run fit in advance !")
+
+        if not self.inplace:
+            return tmp
 
