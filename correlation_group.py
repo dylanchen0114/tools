@@ -11,7 +11,7 @@ from sklearn.cluster import DBSCAN
 
 class CorrGroup:
     def __init__(self, df):
-        self.corr_matrix = 1 - df.corr()
+        self.corr_matrix = 1 - df.corr().fillna(0)
 
     def fit_predict(self, esp, min_points):
         model = DBSCAN(eps=esp, min_samples=min_points, metric='precomputed')
