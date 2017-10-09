@@ -23,7 +23,7 @@ from sklearn.metrics import roc_curve, auc
 from sklearn.cross_validation import train_test_split
 from sklearn import tree
 
-from contingency import Contingency as cy
+from my_tools.contingency import Contingency as cy
 
 # warnings.filterwarnings('ignore')
 # import logging
