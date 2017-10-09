@@ -77,7 +77,7 @@ class Sklearn(BaseAlgo):
         save_pickle(self.model, './scikit-learn-model-%s.pkl' % name)
 
         if hasattr(self.model, 'coef_'):
-            _coef = self.model.coef_
+            _coef = self.model.coef_[0]
             coef_df = pd.DataFrame({'Var_Name': feature_names, 'Var_Coef': _coef})
             coef_df.to_csv('./feature_coef_%s.csv' % name, index=None)
 
