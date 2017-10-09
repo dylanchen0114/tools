@@ -89,29 +89,30 @@ class Sklearn(BaseAlgo):
 
 
 class SMLogit(BaseAlgo):
-
     def __init__(self, has_constant):
         self.has_constant = has_constant
 
-    def summary2df(self, summary, name):
-
+    def summary2df(self, summary, name, feature_names):
         pvals = summary.pvalues
         coef = summary.params
         conf_lower = summary.conf_int()[0]
         conf_higher = summary.conf_int()[1]
 
-        tmp_df = pd.DataFrame({"pvals": pvals, "coeff": coef, "conf_lower": conf_lower, "conf_higher": conf_higher})
+        tmp_df = pd.DataFrame(
+            {'feature': feature_names + ['const'], "pvals": pvals, "coeff": coef, "conf_lower": conf_lower,
+             "conf_higher": conf_higher})
 
         # Reordering...
-        results_df = tmp_df[["coeff", "pvals", "conf_lower", "conf_higher"]]
-        results_df.to_csv('./SMLogit-coef-%s.pkl' % name, index=None)
+        results_df = tmp_df[['feature', "coeff", "pvals", "conf_lower", "conf_higher"]]
+        results_df.to_csv('./SMLogit-coef-%s.csv' % name, index=None)
 
-    def fit(self, X_train, y_train, seed=42, feature_names=None, name=None, **kwa):
-        X_train = pd.DataFrame(X_train, columns=feature_names)
-        self.model = sm.Logit(y_train, sm.add_constant(X_train, prepend=False, has_constant=self.has_constant)).fit()
+    def fit(self, x_train, y_train, x_eval=None, y_eval=None, seed=42, name=None, feature_names=None, **kwa):
+        x_train = pd.DataFrame(x_train, columns=feature_names)
+        self.model = sm.Logit(y_train, sm.add_constant(x_train, prepend=False, has_constant=self.has_constant)).fit()
+        print(self.model.summary())
 
-        self.summary2df(self.model)
+        self.summary2df(self.model, name=name, feature_names=feature_names)
         save_pickle(self.model, './SMLogit-model-%s.pkl' % name)
 
-    def predict(self, X):
-        return self.model.predict(sm.add_constant(X, prepend=False, has_constant=self.has_constant))
+    def predict(self, x):
+        return self.model.predict(sm.add_constant(x, prepend=False, has_constant=self.has_constant))
