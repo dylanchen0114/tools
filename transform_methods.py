@@ -124,7 +124,7 @@ class WoE:
         self.df.set_index(x.index, inplace=True)
 
         if ref_table:
-            self.bins.to_csv('./%s_ref_table.csv' % name)
+            self.bins.to_csv('./ref_table_%s.csv' % name)
 
         return self
 
