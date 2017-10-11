@@ -411,15 +411,13 @@ class EndsCappingPercentile:
         else:
             tmp = x
 
-        if self.floor is not None:
-            tmp[tmp < self.floor] = self.floor
-        else:
+        if self.floor is None and self.ceil is None:
             raise Exception("Must run fit in advance !")
-
-        if self.ceil is not None:
-            tmp[tmp > self.ceil] = self.ceil
         else:
-            raise Exception("Must run fit in advance !")
+            if self.floor is not None:
+                tmp[tmp < self.floor] = self.floor
+            if self.ceil is not None:
+                tmp[tmp > self.ceil] = self.ceil
 
         if not self.inplace:
             return tmp
@@ -456,15 +454,13 @@ class EndsCappingValue:
         else:
             tmp = x
 
-        if self.floor is not None:
-            tmp[tmp < self.floor] = self.floor
-        else:
+        if self.floor is None and self.ceil is None:
             raise Exception("Must run fit in advance !")
-
-        if self.ceil is not None:
-            tmp[tmp > self.ceil] = self.ceil
         else:
-            raise Exception("Must run fit in advance !")
+            if self.floor is not None:
+                tmp[tmp < self.floor] = self.floor
+            if self.ceil is not None:
+                tmp[tmp > self.ceil] = self.ceil
 
         if not self.inplace:
             return tmp
