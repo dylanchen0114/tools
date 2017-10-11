@@ -385,6 +385,8 @@ class EndsCappingPercentile:
         self.inplace = inplace
         self.low_percent = low_percent
         self.up_percent = up_percent
+        self.floor = None
+        self.ceil = None
 
     def fit(self, x):
 
