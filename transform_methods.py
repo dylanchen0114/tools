@@ -331,7 +331,7 @@ class WoE:
         woe_fig.autofmt_xdate()
         return woe_fig
 
-    def optimize(self, criterion=None, fix_depth=None, max_depth=None, cv=3, scoring=None, min_samples_leaf=None):
+    def optimize(self, criterion=None, fix_depth=None, max_depth=None, cv=3, scoring=None, min_samples_leaf=None, ref_table=False, name=None):
         """
         WoE bucketing optimization (continuous variables only)
         :param criterion: binary tree split criteria
@@ -371,7 +371,7 @@ class WoE:
         opt_bins = final_tree.tree_.threshold[final_tree.tree_.feature >= 0]
         opt_bins = np.sort(opt_bins)
         new_woe = WoE(self.__qnt_num, self._min_block_size, self.spec_values, self.v_type, opt_bins, self.t_type)
-        return new_woe.fit(self.df['X'], self.df['Y'])
+        return new_woe.fit(self.df['X'], self.df['Y'], ref_table, name)
 
     @staticmethod
     def _bucket_woe(x):
