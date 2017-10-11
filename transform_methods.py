@@ -26,11 +26,11 @@ class WoE:
         :return: initialized class
         """
         self.__qnt_num = qnt_num  # Num of buckets/quartiles
-        self._predefined_bins = None if bins is None else np.array(bins)  # user bins for continuous variables
+        self._predefined_bins = None  # if bins is None else np.array(bins)  # user bins for continuous variables
         self.v_type = v_type  # if 'c' variable should be continuous, if 'd' - discrete
         self._min_block_size = min_block_size  # Min num of observation in bucket
         self._gb_ratio = None  # Ratio of good and bad in the sample
-        self.bins = None  # WoE Buckets (bins) and related statistics
+        self.bins = bins  # WoE Buckets (bins) and related statistics
         self.df = None  # Training sample DataFrame with initial data and assigned woe
         self.qnt_num = None  # Number of quartiles used for continuous part of variable binning
         self.t_type = t_type  # Type of target variable
