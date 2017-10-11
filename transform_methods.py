@@ -124,7 +124,7 @@ class WoE:
         self.df.set_index(x.index, inplace=True)
 
         if ref_table:
-            self.bins.to_csv('./ref_table_%s.csv' % name)
+            self.bins.to_csv('./ref_table_%s.csv' % name, index=None)
 
         return self
 
@@ -384,15 +384,16 @@ class WoE:
 
 class EndsCappingPercentile:
 
-    def __init__(self, low_percent=None, up_percent=None, inplace=True):
+    def __init__(self, low_percent=None, up_percent=None, inplace=True, name=None):
 
         self.inplace = inplace
         self.low_percent = low_percent
         self.up_percent = up_percent
         self.floor = None
         self.ceil = None
+        self.name = name
 
-    def fit(self, x):
+    def fit(self, x, save=False):
 
         if not self.inplace:
             tmp = x.copy()
@@ -406,6 +407,10 @@ class EndsCappingPercentile:
         if self.up_percent is not None:
             self.ceil = tmp.quantile(self.up_percent)  # interpolation='higher'
             tmp[tmp > self.ceil] = self.ceil
+
+        if save:
+            out = pd.DataFrame([self.floor, self.ceil], columns=['floor', 'ceil'])
+            out.to_csv('./ends_capping_value_%s.csv' % self.name, index=None)
 
         if not self.inplace:
             return tmp
