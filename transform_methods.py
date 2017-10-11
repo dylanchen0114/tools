@@ -128,14 +128,14 @@ class WoE:
 
         return self
 
-    def fit_transform(self, x, y):
+    def fit_transform(self, x, y, ref_table=False, name=None):
         """
         Fit WoE transformation
         :param x: continuous or discrete predictor
         :param y: binary target variable
         :return: WoE transformed variable
         """
-        self.fit(x, y)
+        self.fit(x, y, ref_table, name)
         return self.df['woe']
 
     def _split_sample(self, df):
