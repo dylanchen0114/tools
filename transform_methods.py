@@ -409,7 +409,7 @@ class EndsCappingPercentile:
             tmp[tmp > self.ceil] = self.ceil
 
         if save:
-            out = pd.DataFrame([self.floor, self.ceil], columns=['floor', 'ceil'])
+            out = pd.DataFrame(np.array([self.floor, self.ceil]).reshape(1, 2), columns=['floor', 'ceil'])
             out.to_csv('./ends_capping_value_%s.csv' % self.name, index=None)
 
         if not self.inplace:
