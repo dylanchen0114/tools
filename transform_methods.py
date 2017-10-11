@@ -47,7 +47,7 @@ class WoE:
             else:
                 self.spec_values = {i: 'd_' + str(i) for i in spec_values}
 
-    def fit(self, x, y):
+    def fit(self, x, y, ref_table=False, name=None):
         """
         Fit WoE transformation
         :param x: continuous or discrete predictor
@@ -122,6 +122,10 @@ class WoE:
         # returning to original observation order
         self.df.sort_values('order', inplace=True)
         self.df.set_index(x.index, inplace=True)
+
+        if ref_table:
+            self.bins.to_csv('./%s_ref_table.csv' % name)
+
         return self
 
     def fit_transform(self, x, y):
