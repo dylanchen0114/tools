@@ -38,8 +38,6 @@ class AdvancedEdd:
         self.output_path = output_path
         self.y_index = y_index
 
-        pass
-
     def row2fields(self, var_type=None, header=True):
 
         num_fields = 0
