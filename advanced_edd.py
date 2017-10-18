@@ -99,7 +99,7 @@ class AdvancedEdd:
 
         type_algorithm = {'categorical': [chi2],
                           'numeric': [pearsonr]}
-        print(input_file)
+
         with open(input_file) as csv_file:
 
             file = csv.reader(csv_file, delimiter=',')
