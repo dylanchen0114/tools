@@ -67,7 +67,7 @@ class AdvancedEdd:
                     for i in range(num_fields - 1):
                         # create columns temp file and write header (one column, y label) to each file
                         tmp_list.append(open('%s/field' % os.path.dirname(self.input_path) + str(i + 1) + '.tmp', 'w'))
-                        tmp_list[i].write('{0},{1},{2}'.format(keys[i], 'variable_type', 'target_y') + "\n")
+                        tmp_list[i].write('{0},{1},{2}'.format(keys[i].replace(',', '，'), 'variable_type', 'target_y') + "\n")
 
                     continue
 
@@ -131,7 +131,13 @@ class AdvancedEdd:
         for num, method in enumerate(type_algorithm[var_type]):
             if method == chi2:
                 array_x = array_x.reshape(len(array_x), 1)
-            statistic, p_value = method(array_x, array_y)
+
+            try:
+                statistic, p_value = method(array_x, array_y)
+            except ValueError:
+                statistic = ' '
+                p_value = ' '
+                
             if method == chi2:
                 statistic = statistic[0]
                 p_value = p_value[0]
