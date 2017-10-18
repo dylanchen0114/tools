@@ -125,8 +125,8 @@ class AdvancedEdd:
 
         value_mask = [i for i, x in enumerate(col_x) if x != '']
 
-        array_x = np.array(col_x)[value_mask].astype(np.float16)
-        array_y = np.array(tar_y)[value_mask].astype(np.float16)
+        array_x = np.array(col_x)[value_mask].astype(np.float64)
+        array_y = np.array(tar_y)[value_mask].astype(np.float64)
 
         for num, method in enumerate(type_algorithm[var_type]):
             if method == chi2:
