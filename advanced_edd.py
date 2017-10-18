@@ -28,7 +28,7 @@ class AdvancedEdd:
 
     header: boolean, default True [must be True :)]
     write each column to input_path directory
-    
+
     """
 
     def __init__(self, input_path, var_type, output_path, y_index):
@@ -37,6 +37,8 @@ class AdvancedEdd:
         self.var_type = var_type
         self.output_path = output_path
         self.y_index = y_index
+
+        pass
 
     def row2fields(self, var_type=None, header=True):
 
@@ -98,11 +100,13 @@ class AdvancedEdd:
         type_algorithm = {'categorical': [chi2],
                           'numeric': [pearsonr]}
         print(input_file)
-        with open(input_file) as file:
+        with open(input_file) as csv_file:
+
+            file = csv.reader(csv_file, delimiter=',')
 
             # collect column x and target y into list
             for row_num, line in enumerate(file):
-                x, var_type, y = line.strip().split(',')
+                x, var_type, y = line
 
                 if row_num == 0:
                     key = x
@@ -147,18 +151,22 @@ class AdvancedEdd:
 
         print("Getting each variables' type ...")
         type_dict = {}
-        with open(self.var_type) as dict_file:
+        with open(self.var_type) as csv_file:
+
+            dict_file = csv.reader(csv_file, delimiter=',')
+
             for row_index, row_data in enumerate(dict_file):
                 if row_index == 0:
                     continue
-                k, v = row_data.strip().split(',')
+                k, v = row_data
                 type_dict.update({k: v})
 
         print("Splitting TXT file in a vertical direction way ...")
         self.row2fields(var_type=type_dict)
 
         output_header = ['var_name', 'mean', 'std', 'No_obs', 'No_uniq', 'sum', 'missrate', 'misscnt', 'mod1', 'mod2',
-                         'mod3', 'max', 'min', 'p1', 'p5', 'p10', 'p25', 'p33', 'p50', 'p66', 'p75', 'p90', 'p95', 'p99',
+                         'mod3', 'max', 'min', 'p1', 'p5', 'p10', 'p25', 'p33', 'p50', 'p66', 'p75', 'p90', 'p95',
+                         'p99',
                          'statistic_0', 'p_value_0', 'statistic_1', 'p_value_1']
 
         print("Creating output header ...")
