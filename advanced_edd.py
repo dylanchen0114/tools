@@ -137,7 +137,7 @@ class AdvancedEdd:
             except ValueError:
                 statistic = ' '
                 p_value = ' '
-                
+
             if method == chi2:
                 statistic = statistic[0]
                 p_value = p_value[0]
