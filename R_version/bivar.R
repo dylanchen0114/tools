@@ -4,19 +4,26 @@ library(data.table)
 library(dplyr)
 options(stringsAsFactors = F)
 
-dpath <- '~/Documents/operator_model/'
-dat3 <- as.data.frame(fread("~/Documents/operator_model/data_for_bivar.csv",encoding='UTF-8',sep = ","))
+dpath <- '~/Documents/外部数据分析/cleaned/'
+dat3 <- as.data.frame(fread("./银联新客测试样本6.3W.csv",encoding='UTF-8',sep = ","))
+select <- read.csv('../yinlian/select_feature.csv', fileEncoding= 'gb18030')
+drop = select$feature_names
 
-source('~/Documents/python_project/anaconda/lib/python3.5/my_tools/Hongye.bivariate.R')
+# target <- as.data.frame(fread("~/Documents/operator_model/documents/origin_train_y.csv",encoding='UTF-8',sep = ",", col.names = c('is_overdue')))
+# dat3 <- cbind(dat3, target)
+
+source('~/Documents/python_project/anaconda/lib/python3.5/my_tools/R_version/Hongye.bivariate.R')
+dat3[, select]
 
 
 y = 'is_overdue'
 # drop_name = names(dat3)[80:104]
-drop_name = c('overdue_day', 'is_overdue', 'ref_time')
-
+drop_name = c('order_id', 'user_id', 'ref_time', 'overdue_day', 'order_time', 
+              'mobile_phone', 'order_time_month', 'name', 'id', 'card_no', 'ym', drop, names(dat3)[grep('>', names(dat3))])                                                
+ 
 Hongye.bivariate(
   Indt = dat3, 
-  op_ds = file.path(dpath, 'bivar_v2', 'select_'),
+  op_ds = file.path(dpath, '/total/total_'),
   batch = T,
   drop_list = drop_name,
   target_score = y,
