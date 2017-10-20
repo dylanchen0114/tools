@@ -2,37 +2,26 @@
 #!/usr/bin/env python
 __author__ = 'chendeqing'
 
-import pandas as pd
-import numpy as np
+import dumb_containers as dc
 import math
-import statsmodels.api as sm
-import matplotlib.pyplot as plt
-
-from sklearn.linear_model import LogisticRegression
-from sklearn.preprocessing import StandardScaler
-from sklearn.cross_validation import KFold, train_test_split
-from sklearn.metrics import confusion_matrix, mean_squared_error, roc_auc_score
-from sklearn.metrics import roc_curve, auc, precision_recall_curve, average_precision_score
-# from sklearn.ensemble import VotingClassifier
-# from sklearn.grid_search import GridSearchCV
-
-# Gradient Boost
-# import xgboost as xgb
-
-from scipy.stats import pearsonr, ks_2samp
-from datetime import datetime
-
-import traceback
-import dateutil
 import re
 import time
-import os
-from os.path import split, splitext, join
-import sys
-# sys.path.append('/home/risk_chendeqing/modules')
+import traceback
+from datetime import datetime
 
-import pickle
-import dumb_containers as dc
+import dateutil
+import numpy as np
+import pandas as pd
+import statsmodels.api as sm
+from scipy.stats import pearsonr, ks_2samp
+from sklearn.linear_model import LogisticRegression
+from sklearn.preprocessing import StandardScaler
+
+# from sklearn.ensemble import VotingClassifier
+# from sklearn.grid_search import GridSearchCV
+# Gradient Boost
+# import xgboost as xgb
+# sys.path.append('/home/risk_chendeqing/modules')
 
 
 ''' ID number '''
