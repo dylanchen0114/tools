@@ -110,7 +110,7 @@ class SMLogit(BaseAlgo):
         x_train = pd.DataFrame(x_train, columns=feature_names)
         self.model = sm.Logit(y_train, sm.add_constant(x_train, prepend=False, has_constant=self.has_constant)).fit()
 
-        self.summary2df(self.model, name=name, feature_names=feature_names)
+        self.summary2df(self.model, name=name, feature_names=feature_names, directory=directory)
         save_pickle(self.model, '%s/SMLogit-model-%s.pkl' % (directory, name))
 
     def predict(self, x):
