@@ -4,11 +4,12 @@
 @author: Dylan Chen
 
 To be continue (IV value)
-bbb
+aaaa
 
 """
 
 import csv
+import descriptive_statistics
 import glob
 import os
 from functools import partial
@@ -17,8 +18,6 @@ from multiprocessing import Pool
 import numpy as np
 from scipy.stats.stats import pearsonr
 from sklearn.feature_selection import chi2
-
-import descriptive_statistics
 
 
 class AdvancedEdd:
