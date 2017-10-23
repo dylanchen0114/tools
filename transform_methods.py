@@ -384,7 +384,7 @@ class WoE:
 
 class EndsCappingPercentile:
 
-    def __init__(self, low_percent=None, up_percent=None, inplace=True, name=None):
+    def __init__(self, low_percent=None, up_percent=None, inplace=True, name=None, directory=None):
 
         self.inplace = inplace
         self.low_percent = low_percent
@@ -392,6 +392,7 @@ class EndsCappingPercentile:
         self.floor = None
         self.ceil = None
         self.name = name
+        self.directory = directory
 
     def fit(self, x, save=False):
 
@@ -410,7 +411,7 @@ class EndsCappingPercentile:
 
         if save:
             out = pd.DataFrame(np.array([self.floor, self.ceil]).reshape(1, 2), columns=['floor', 'ceil'])
-            out.to_csv('./ends_capping_value_%s.csv' % self.name, index=None)
+            out.to_csv('%s/ends_capping_value_%s.csv' % (self.directory, self.name), index=None)
 
         if not self.inplace:
             return tmp
