@@ -11,6 +11,7 @@ from os.path import join
 
 
 class WOE(object):
+
     """
     :parameter:
     'dpath':  woe生成文件储存根目录
@@ -48,6 +49,7 @@ class WOE(object):
             # 这里不需要指定num_features和cat_features, 会根据nominal_ref_table和numeric_ref_table里有的列名生成相应的woe
 
     """
+
     def __init__(self, num_features=None, cat_features=None, dpath='/data/yezhenwei/OCODP/Overdue_15',
                  cm='/Output/woe/', fname='overdue', target='is_overdue', save_pic=0):
         self.dpath = dpath
