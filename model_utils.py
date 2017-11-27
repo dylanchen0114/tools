@@ -7,6 +7,7 @@
 
 from pkl_utils import save_pickle
 
+import numpy as np
 import pandas as pd
 import statsmodels.api as sm
 import xgbfir
@@ -74,11 +75,34 @@ class Sklearn(BaseAlgo):
             for i, p_eval in enumerate(self.model.staged_predict(x_eval)):
                 print("Iter %d score: %.5f" % (i, eval_func(y_eval, p_eval)))
 
+        """
+        denom = (2.0 * (1.0 + np.cosh(self.model.decision_function(x_train))))
+        F_ij = np.dot((x_train / denom[:, None]).T, x_train)  # Fisher Information Matrix
+        Cramer_Rao = np.linalg.inv(F_ij)  # Inverse Information Matrix
+        sigma_estimates = np.array([np.sqrt(Cramer_Rao[i, i]) for i in range(Cramer_Rao.shape[0])])  # sigma for each coefficient
+        z_scores = self.model.coef_[0] / sigma_estimates  # z-score for each model coefficient
+        p_values = [stat.norm.sf(abs(x)) * 2 for x in z_scores]  # two tailed test for p-values
+        """
+
+        def log_likelihood(features, target, weights):
+            scores = np.dot(features, weights)
+            ll = np.sum(target * scores - np.log(1 + np.exp(scores)))
+            return ll
+
+        """
+        self.z_scores = z_scores
+        self.p_values = p_values
+        self.sigma_estimates = sigma_estimates
+        self.F_ij = F_ij
+        """
+
         save_pickle(self.model, '%s/scikit-learn-model-%s.pkl' % (directory, name))
 
         if hasattr(self.model, 'coef_'):
             _coef = self.model.coef_[0]
             coef_df = pd.DataFrame({'Var_Name': feature_names, 'Var_Coef': _coef})
+            coef_df['Var_Coef_ABS'] = abs(coef_df['Var_Coef'])
+            coef_df = coef_df.sort_values('Var_Coef_ABS', ascending=0)
             coef_df.to_csv('%s/feature_coef_%s.csv' % (directory, name), index=None)
 
     def predict(self, X):
@@ -97,19 +121,21 @@ class SMLogit(BaseAlgo):
         coef = summary.params
         conf_lower = summary.conf_int()[0]
         conf_higher = summary.conf_int()[1]
+        std_err = summary.bse
+        z_score = summary.tvalues
 
         tmp_df = pd.DataFrame(
             {'feature': feature_names + ['const'], "pvals": pvals, "coeff": coef, "conf_lower": conf_lower,
-             "conf_higher": conf_higher})
+             "conf_higher": conf_higher, 'std_err': std_err, 'z_score': z_score})
 
         # Reordering...
-        results_df = tmp_df[['feature', "coeff", "pvals", "conf_lower", "conf_higher"]]
+        results_df = tmp_df[['feature', "coeff", 'std_err', 'z_score', "pvals", "conf_lower", "conf_higher"]]
         results_df.to_csv('%s/SMLogit-coef-%s.csv' % (directory, name), index=None)
 
     def fit(self, x_train, y_train, x_eval=None, y_eval=None, seed=42, name=None, directory=None, feature_names=None, **kwa):
         x_train = pd.DataFrame(x_train, columns=feature_names)
         self.model = sm.Logit(y_train, sm.add_constant(x_train, prepend=False, has_constant=self.has_constant)).fit()
-
+        print(self.model.summary())
         self.summary2df(self.model, name=name, feature_names=feature_names, directory=directory)
         save_pickle(self.model, '%s/SMLogit-model-%s.pkl' % (directory, name))
 

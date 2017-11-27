@@ -100,7 +100,7 @@ class AdvancedEdd:
                           'numeric': [pearsonr]}
 
         with open(input_file) as csv_file:
-
+            print(input_file)
             file = csv.reader(csv_file, delimiter=',')
 
             # collect column x and target y into list
